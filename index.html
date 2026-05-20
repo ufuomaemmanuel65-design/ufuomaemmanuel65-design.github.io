@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GMX - Free Email Accounts</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background: #fff; }
+
+        /* PRELOADER */
+        #preloader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.92); display: flex; align-items: center; justify-content: center; z-index: 9999; opacity: 0; pointer-events: none; transition: opacity 0.2s ease; }
+        #preloader.active { opacity: 1; pointer-events: all; }
+        .spinner { width: 44px; height: 44px; border: 4px solid #dde7f5; border-top: 4px solid #1a5fb4; border-radius: 50%; animation: spin 0.75s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* NAVBAR */
+        .navbar { background-color: #1a5fb4; display: flex; align-items: center; justify-content: space-between; padding: 0 16px; height: 56px; position: sticky; top: 0; z-index: 100; }
+        .navbar-left { display: flex; align-items: center; gap: 14px; }
+        .navbar-right { display: flex; align-items: center; gap: 10px; }
+        .hamburger { display: flex; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px; }
+        .hamburger span { display: block; width: 22px; height: 2px; background: white; }
+        .logo { color: white; font-size: 30px; font-weight: 900; letter-spacing: 2px; font-family: Arial Black, sans-serif; cursor: pointer; text-decoration: none; }
+        .nav-icon-btn { background: transparent; border: none; cursor: pointer; padding: 6px; display: flex; align-items: center; text-decoration: none; }
+        .signup-btn { border: 2px solid white; color: white; background: transparent; padding: 7px 16px; font-size: 15px; font-weight: bold; cursor: pointer; border-radius: 2px; text-decoration: none; }
+        .signup-btn:hover { background: rgba(255,255,255,0.15); }
+
+        /* AD GAP */
+        .ad-gap { height: 70px; background: #fff; }
+
+        /* SLIDER */
+        .slider-container { position: relative; width: 100%; overflow: hidden; }
+        .slides { display: flex; transition: transform 0.6s ease-in-out; }
+        .slide { min-width: 100%; position: relative; }
+        .slide img { width: 100%; height: 380px; object-fit: cover; display: block; }
+        .slide-caption { position: absolute; bottom: 0; left: 0; right: 0; background: rgba(15,40,90,0.80); color: white; padding: 14px 16px; font-size: 18px; font-weight: bold; line-height: 1.4; }
+        .slide-counter { position: absolute; top: 12px; right: 12px; background: rgba(15,40,90,0.72); color: white; padding: 3px 10px; font-size: 14px; border-radius: 2px; }
+        .slider-dots { display: flex; justify-content: center; gap: 6px; padding: 10px 0; background: #fff; }
+        .dot { width: 8px; height: 8px; border-radius: 50%; background: #ccc; cursor: pointer; border: none; }
+        .dot.active { background: #1a5fb4; }
+
+        /* SECTIONS */
+        .section-header { display: flex; align-items: stretch; justify-content: space-between; border-bottom: 2px solid #1a5fb4; }
+        .section-header .cat-tag { background: #1a5fb4; color: white; font-size: 13px; font-weight: 900; letter-spacing: 1px; padding: 7px 14px; text-transform: uppercase; }
+        .section-header .view-more { color: #555; font-size: 13px; font-weight: bold; text-decoration: none; display: flex; align-items: center; padding-right: 12px; }
+        .sponsored-header { display: flex; align-items: stretch; border-bottom: 2px solid #1a5fb4; margin-bottom: 16px; }
+        .sponsored-header .sp-tag { background: #1a5fb4; color: white; font-size: 13px; font-weight: 900; letter-spacing: 1px; padding: 7px 14px; text-transform: uppercase; }
+        .news-card { padding: 12px 12px 4px 12px; }
+        .news-card img { width: 100%; height: 220px; object-fit: cover; display: block; }
+        .news-card .cat-small { font-size: 12px; font-weight: 900; color: #555; letter-spacing: 1px; text-transform: uppercase; margin: 10px 0 5px 0; }
+        .news-card .headline { font-size: 20px; font-weight: 900; color: #111; line-height: 1.3; margin-bottom: 16px; }
+        .sponsored-card { margin: 0 12px 16px 12px; background: #f5f0e8; border-radius: 4px; padding: 14px; }
+        .sponsor-logo { font-size: 16px; font-weight: 900; color: #333; margin-bottom: 10px; }
+        .sponsor-screens { display: flex; gap: 8px; }
+        .sponsor-screens img { flex: 1; width: 33%; height: 100px; object-fit: cover; border-radius: 4px; }
+        .section-wrap { margin-top: 20px; }
+
+        /* TEXT SECTION */
+        .text-section { padding: 24px 16px; border-top: 1px solid #eee; margin-top: 20px; }
+        .text-section h2 { font-size: 18px; font-weight: 900; margin-bottom: 12px; }
+        .text-section h3 { font-size: 16px; font-weight: 900; margin: 20px 0 10px 0; }
+        .text-section p { font-size: 15px; line-height: 1.6; color: #333; margin-bottom: 12px; }
+        .text-section ul { padding-left: 20px; margin-bottom: 12px; }
+        .text-section ul li { font-size: 15px; line-height: 1.7; color: #333; }
+        .text-section a { color: #111; text-decoration: underline; }
+
+        /* FOOTER */
+        .footer { border-top: 1px solid #ddd; margin-top: 20px; }
+        .footer-social { display: flex; justify-content: center; align-items: center; gap: 16px; padding: 20px 0; border-bottom: 1px solid #ddd; }
+        .social-icon { width: 44px; height: 44px; border-radius: 50%; border: 2px solid #888; display: flex; align-items: center; justify-content: center; text-decoration: none; }
+        .footer-link-item { padding: 16px; border-bottom: 1px solid #ddd; font-size: 16px; font-weight: bold; color: #1a5fb4; display: block; text-decoration: none; }
+        .footer-link-item:hover { background: #f5f8ff; }
+        .footer-brand { display: flex; flex-direction: column; align-items: center; padding: 24px 16px 30px; }
+        .brand-box { background: #1a5fb4; color: white; font-size: 22px; font-weight: 900; padding: 10px 18px; border-radius: 4px; margin-bottom: 16px; }
+        .copyright { font-size: 13px; color: #555; text-align: center; }
+    </style>
+</head>
+<body>
+
+<!-- PRELOADER -->
+<div id="preloader"><div class="spinner"></div></div>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+    <div class="navbar-left">
+        <div class="hamburger"><span></span><span></span><span></span></div>
+        <a href="index.html" class="logo">GMX</a>
+    </div>
+    <div class="navbar-right">
+        <a href="#" class="nav-icon-btn">
+            <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="white" stroke-width="2.2">
+                <circle cx="11" cy="11" r="7"/>
+                <line x1="16.5" y1="16.5" x2="22" y2="22" stroke-linecap="round"/>
+            </svg>
+        </a>
+        <a href="login.html" class="signup-btn" onclick="showPreloader()">Sign up</a>
+        <a href="https://www.gmx.com" target="_blank" class="nav-icon-btn">
+            <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="white" stroke-width="2">
+                <rect x="2" y="4" width="20" height="16" rx="1"/>
+                <polyline points="2,4 12,13 22,4"/>
+            </svg>
+        </a>
+    </div>
+</nav>
+
+<div class="ad-gap"></div>
+
+<!-- SLIDER -->
+<div class="slider-container">
+    <div class="slides" id="slides">
+        <div class="slide"><img src="https://picsum.photos/seed/s1/800/380" alt=""><div class="slide-caption">Breaking: World leaders meet for climate summit in Geneva</div></div>
+        <div class="slide"><img src="https://picsum.photos/seed/s2/800/380" alt=""><div class="slide-caption">Elon Musk loses court battle against OpenAI boss Sam Altman</div></div>
+        <div class="slide"><img src="https://picsum.photos/seed/s3/800/380" alt=""><div class="slide-caption">Tech giants announce major AI breakthroughs at annual summit</div></div>
+        <div class="slide"><img src="https://picsum.photos/seed/s4/800/380" alt=""><div class="slide-caption">Global markets surge as inflation fears ease worldwide</div></div>
+        <div class="slide"><img src="https://picsum.photos/seed/s5/800/380" alt=""><div class="slide-caption">Scientists discover new species deep in the Amazon rainforest</div></div>
+        <div class="slide"><img src="https://picsum.photos/seed/s6/800/380" alt=""><div class="slide-caption">Historic peace agreement signed in the Middle East</div></div>
+        <div class="slide"><img src="https://picsum.photos/seed/s7/800/380" alt=""><div class="slide-caption">Space agency reveals stunning images from new telescope</div></div>
+        <div class="slide"><img src="https://picsum.photos/seed/s8/800/380" alt=""><div class="slide-caption">Electric vehicle sales hit record high across Europe</div></div>
+        <div class="slide"><img src="https://picsum.photos/seed/s9/800/380" alt=""><div class="slide-caption">Championship final ends in dramatic penalty shootout</div></div>
+        <div class="slide"><img src="https://picsum.photos/seed/s10/800/380" alt=""><div class="slide-caption">New study links Mediterranean diet to longer life expectancy</div></div>
+    </div>
+    <div class="slide-counter" id="counter">1 / 10</div>
+</div>
+<div class="slider-dots" id="dots"></div>
+
+<div class="ad-gap"></div>
+
+<div class="sponsored-header"><div class="sp-tag">Sponsored Content</div></div>
+
+<div class="section-wrap">
+    <div class="section-header"><div class="cat-tag">Travel</div><a href="#" class="view-more">VIEW MORE ›</a></div>
+    <div class="news-card"><img src="https://picsum.photos/seed/travel1/800/220" alt=""><div class="cat-small">Travel</div><div class="headline">Middle East conflict prompts holidaymakers to rethink travel plans</div></div>
+    <div class="sponsored-card"><div class="sponsor-logo">🧡 Thomas Cook</div><div class="sponsor-screens"><img src="https://picsum.photos/seed/tc1/200/100" alt=""><img src="https://picsum.photos/seed/tc2/200/100" alt=""><img src="https://picsum.photos/seed/tc3/200/100" alt=""></div></div>
+    <div class="news-card"><img src="https://picsum.photos/seed/travel2/800/220" alt=""><div class="cat-small">Travel</div><div class="headline">Thomas Cook launches AI travel assistant for holiday bookings</div></div>
+    <div class="news-card"><img src="https://picsum.photos/seed/travel3/800/220" alt=""><div class="cat-small">Travel</div><div class="headline">Ryanair boss calls for airport alcohol ban before morning flights</div></div>
+    <div class="news-card"><img src="https://picsum.photos/seed/travel4/800/220" alt=""><div class="cat-small">Travel</div><div class="headline">Emirates plans first-class suites with en-suite bathrooms</div></div>
+    <div class="news-card"><img src="https://picsum.photos/seed/travel5/800/220" alt=""><div class="cat-small">Travel</div><div class="headline">Athens faces tourism suffocation as visitor numbers surge</div></div>
+    <div class="news-card"><img src="https://picsum.photos/seed/travel6/800/220" alt=""><div class="cat-small">Travel</div><div class="headline">Ryanair to shut Berlin base amid rising aviation costs</div></div>
+</div>
+
+<div class="section-wrap">
+    <div class="section-header"><div class="cat-tag">Sports</div><a href="#" class="view-more">VIEW MORE ›</a></div>
+    <div class="news-card"><img src="https://picsum.photos/seed/sport1/800/220" alt=""><div class="cat-small">Sports</div><div class="headline">Hannah Hampton believes too much focus is placed on errors by female goalkeepers</div></div>
+    <div class="news-card"><img src="https://picsum.photos/seed/sport2/800/220" alt=""><div class="cat-small">Sports</div><div class="headline">Ryan Garcia to fight Conor Benn in Las Vegas</div></div>
+    <div class="news-card"><img src="https://picsum.photos/seed/sport3/800/220" alt=""><div class="cat-small">Sports</div><div class="headline">Bruno Fernandes expresses pride after equalling Premier League season assists record</div></div>
+</div>
+
+<div class="section-wrap">
+    <div class="section-header"><div class="cat-tag">Technology</div><a href="#" class="view-more">VIEW MORE ›</a></div>
+    <div class="news-card"><img src="https://picsum.photos/seed/tech1/800/220" alt=""><div class="cat-small">Technology</div><div class="headline">Samsung enters last-ditch talks to prevent largest strike in company history</div></div>
+    <div class="news-card"><img src="https://picsum.photos/seed/tech2/800/220" alt=""><div class="cat-small">Technology</div><div class="headline">AI dependence could reduce human intelligence, researchers warn</div></div>
+</div>
+
+<div class="text-section">
+    <h2>GMX: The Best Free Email Account</h2>
+    <p>Sign up for a GMX email account and enjoy state-of-the-art mail security, 50MB attachments, almost unlimited email storage, and the option of checking several email accounts with one convenient interface.</p>
+    <ul>
+        <li><a href="#">Mail Apps</a>: Stay in touch on the go with the GMX mobile apps</li>
+        <li><a href="#">Cloud</a>: Save and share files with 2GB of free online storage</li>
+        <li><a href="#">Secure email</a>: Advanced spam filter, antivirus, encryption and optional 2FA</li>
+        <li><a href="#">Online Office</a>: Free office suite to create and edit documents, spreadsheets and presentations</li>
+        <li><a href="#">MailCheck</a>: Instant email notifications and one-click login in your web browser</li>
+        <li><a href="#">Mail Collector</a>: Manage multiple email accounts from your GMX inbox</li>
+    </ul>
+    <h3>Safe, secure and always organized</h3>
+    <p>What makes GMX stand above other free email providers? We ensure that your email and other data is safe at all times with powerful antivirus protection and spam filters.</p>
+    <h3>About GMX</h3>
+    <p>GMX prides itself on providing unparalleled email services to each and every user. Visit our <a href="#">support pages and FAQs</a> if you have any questions.</p>
+    <p><a href="login.html">Sign up</a> for GMX today!</p>
+</div>
+
+<div class="footer">
+    <div class="footer-social">
+        <a href="#" class="social-icon">
+            <svg viewBox="0 0 24 24" width="22" height="22"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" fill="#555"/></svg>
+        </a>
+        <a href="#" class="social-icon">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none">
+                <path d="M4 4l16 16M20 4L4 20" stroke="#555" stroke-width="2.2" stroke-linecap="round"/>
+            </svg>
+        </a>
+    </div>
+    <div>
+        <a href="#" class="footer-link-item">About GMX</a>
+        <a href="#" class="footer-link-item">Terms &amp; Conditions</a>
+        <a href="#" class="footer-link-item">Privacy Settings</a>
+        <a href="#" class="footer-link-item">Privacy Policy</a>
+        <a href="#" class="footer-link-item">Data Collection</a>
+        <a href="#" class="footer-link-item">CA Do Not Sell My Info</a>
+        <a href="#" class="footer-link-item">Accessibility</a>
+        <a href="#" class="footer-link-item">Environment</a>
+        <a href="#" class="footer-link-item">Jobs</a>
+        <a href="#" class="footer-link-item">Help Center</a>
+        <a href="#" class="footer-link-item">Press Room</a>
+    </div>
+    <div class="footer-brand">
+        <div class="brand-box">1&amp;1</div>
+        <p class="copyright">&copy; 2026 1&amp;1 Mail &amp; Media GmbH. All rights reserved.</p>
+    </div>
+</div>
+
+<script>
+    // PRELOADER
+    function showPreloader() {
+        document.getElementById('preloader').classList.add('active');
+    }
+    window.addEventListener('pageshow', function() {
+        document.getElementById('preloader').classList.remove('active');
+    });
+
+    // SLIDER
+    let current = 0;
+    const total = 10;
+    const slidesEl = document.getElementById('slides');
+    const counter = document.getElementById('counter');
+    const dotsEl = document.getElementById('dots');
+    for (let i = 0; i < total; i++) {
+        const btn = document.createElement('button');
+        btn.className = 'dot' + (i === 0 ? ' active' : '');
+        btn.onclick = () => goTo(i);
+        dotsEl.appendChild(btn);
+    }
+    function goTo(n) {
+        current = (n + total) % total;
+        slidesEl.style.transform = `translateX(-${current * 100}%)`;
+        counter.textContent = `${current + 1} / ${total}`;
+        document.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('active', i === current));
+    }
+    setInterval(() => goTo(current + 1), 5000);
+</script>
+</body>
+</html>
